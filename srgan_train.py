@@ -85,7 +85,7 @@ for epoch in range(1, num_epochs + 1):
 
         # Backward Pass
         discriminator_real_loss = bce_loss(real_output, torch.ones_like(real_output))
-        discriminator_fake_loss = bce_loss(fake_output, torch.ones_like(fake_output))
+        discriminator_fake_loss = bce_loss(fake_output, torch.zeros_like(fake_output))
         discriminator_loss = discriminator_real_loss + discriminator_fake_loss
         discriminator_loss.backward(retain_graph=True)
 
