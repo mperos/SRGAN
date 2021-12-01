@@ -35,7 +35,7 @@ learning_rate = 0.0001
 netG = Generator().to(device)
 netD = Discriminator().to(device)
 lossG = GeneratorLoss().to(device)
-bce_loss = nn.BCEWithLogitsLoss()
+bce_loss = nn.BCELoss()
 
 print("Number of generator parameters: ", sum(param.numel() for param in netG.parameters()))
 print("Number of discriminator parameters: ", sum(param.numel() for param in netD.parameters()))

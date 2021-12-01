@@ -143,7 +143,7 @@ class Discriminator(nn.Module):
         output = self.Block8(output)
         output = self.Block9(output)
 
-        return output
+        return torch.sigmoid(output)
 
 
 class Critic(nn.Module):

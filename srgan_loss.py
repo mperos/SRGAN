@@ -12,7 +12,7 @@ class GeneratorLoss(nn.Module):
             param.requires_grad = False
         self.vgg_network = vgg_network
         self.mse_loss = nn.MSELoss()
-        self.bce_loss = nn.BCEWithLogitsLoss()
+        self.bce_loss = nn.BCELoss()
 
     def forward(self, fake_output, fake_images, real_images):
         adversarial_loss = self.bce_loss(fake_output, torch.ones_like(fake_output))
