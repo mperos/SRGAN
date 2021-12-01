@@ -14,7 +14,6 @@ class GeneratorLoss(nn.Module):
         self.mse_loss = nn.MSELoss()
 
     def forward(self, fake_output, fake_images, real_images):
-        # Optimizers minimize functions, thus minus of the equation
         adversarial_loss = -torch.mean(fake_output)
         vgg_loss = self.mse_loss(self.vgg_network(fake_images), self.vgg_network(real_images))
         l2_loss = self.mse_loss(fake_images, real_images)
@@ -39,7 +38,7 @@ def gradient_penalty(critic, real_images, fake_images):
         create_graph=True,
         retain_graph=True,
     )[0]
-    gradient = gradient.view(gradient.shape[0], -1)  # Flattening so that we can take the norm
+    gradient = gradient.view(gradient.shape[0], -1)
     gradient_norm = gradient.norm(2, dim=1)
     gradient_penalty_value = torch.mean((gradient_norm - 1) ** 2)
     return gradient_penalty_value
