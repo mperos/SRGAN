@@ -18,8 +18,8 @@ from math import log10, sqrt
 from pytorch_msssim import ssim
 
 # Data Locations
-train_data_path = "./train_data/DIV2K_train_HR"
-valid_data_path = "./train_data/DIV2K_valid_HR"
+train_data_path = "./train_data/VOC2012_train_HR"
+valid_data_path = "./train_data/VOC2012_valid_HR"
 
 # Set Device
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
