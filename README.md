@@ -9,9 +9,9 @@ Trening podaci:
 - [VOC2012]()
 
 Test podaci:
-- [BSD200]()
 - [Set5]()
 - [Set14]()
+- [BSD100]()
 - [SunHays80]()
 
 ## Modeli

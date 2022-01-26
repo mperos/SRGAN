@@ -62,11 +62,11 @@ for epoch in range(1, num_epochs + 1):
 
     netC.train()
     netG.train()
-    train_set_size = 0
+    num_of_batches = 0
     train_results = {"c_loss": 0, "g_loss": 0, "c_score": 0, "g_score": 0}
     for data, target in train_bar:
         batch_size = data.size(0)
-        train_set_size += data.size(0)
+        num_of_batches += 1
         # Get data to cuda() and enable grad
         data.requires_grad_(True)
         target.requires_grad_(True)
@@ -118,38 +118,38 @@ for epoch in range(1, num_epochs + 1):
         train_bar.set_description(desc="[%d/%d]" % (epoch, num_epochs))
 
     # Saving training results
-    results["c_loss"].append(train_results["c_loss"] / train_set_size)
-    results["g_loss"].append(train_results["g_loss"] / train_set_size)
-    results["c_score"].append(train_results["c_score"] / train_set_size)
-    results["g_score"].append(train_results["g_score"] / train_set_size)
+    results["c_loss"].append(train_results["c_loss"] / num_of_batches)
+    results["g_loss"].append(train_results["g_loss"] / num_of_batches)
+    results["c_score"].append(train_results["c_score"] / num_of_batches)
+    results["g_score"].append(train_results["g_score"] / num_of_batches)
 
     netG.eval()
     with torch.no_grad():
         valid_bar = tqdm(valid_loader)
-        valid_set_size = 0
-        valid_results = {"mse": 0, "ssim": 0, "psnr": 0}
+        num_of_examples = 0
+        valid_results = {"mse": 0, "psnr": 0, "ssim": 0}
         for lr_image, hr_image in valid_bar:
-            valid_set_size += lr_image.size(0)
+            num_of_examples += 1
             lr_image = lr_image.to(device)
             hr_image = hr_image.to(device)
             sr_image = netG(lr_image).to(device)
 
             # Image Similarity Metrics
-            mse_val = (((sr_image - hr_image) ** 2).data.mean()).item()
-            ssim_val = ssim(sr_image, hr_image).item()
-            psnr_val = 100 if mse_val == 0 else (20 * log10(255.0 / sqrt(mse_val)))
+            mse_val = ((sr_image - hr_image) ** 2).data.mean().item()
+            psnr_val = 10 * log10(1 / mse_val)
+            ssim_val = ssim(sr_image, hr_image, data_range=1).item()
 
             # Validation Results
             valid_results["mse"] += mse_val
-            valid_results["ssim"] += ssim_val
             valid_results["psnr"] += psnr_val
+            valid_results["ssim"] += ssim_val
 
-            valid_bar.set_description(desc="[Validation] PSNR: %.5f SSIM: %.5f" % (valid_results["psnr"] / valid_set_size, valid_results["ssim"] / valid_set_size))
+            valid_bar.set_description(desc="[Validation] PSNR: %.5f SSIM: %.5f" % (valid_results["psnr"] / num_of_examples, valid_results["ssim"] / num_of_examples))
 
         # Saving validation results
-        results["mse"].append(valid_results["mse"] / valid_set_size)
-        results["ssim"].append(valid_results["ssim"] / valid_set_size)
-        results["psnr"].append(valid_results["psnr"] / valid_set_size)
+        results["mse"].append(valid_results["mse"] / num_of_examples)
+        results["psnr"].append(valid_results["psnr"] / num_of_examples)
+        results["ssim"].append(valid_results["ssim"] / num_of_examples)
 
     # Save every fifth model
     if epoch % 5 == 0:

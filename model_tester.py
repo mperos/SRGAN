@@ -29,7 +29,7 @@ model = Generator().eval()
 model.load_state_dict(torch.load(model_folder_path + model_name, map_location=device))
 
 # Iterate over test image sets
-image_sets = ["BSD200", "Set5", "Set14", "SunHays80"]
+image_sets = ["Set5", "Set14", "BSD100"]
 for image_set in image_sets:
     test_data_path = "./test_data/" + image_set + "/"
     # Upscale factor set to 4 because of the generators design
@@ -53,6 +53,14 @@ for image_set in image_sets:
         hr_image = hr_image.to(device)
         sr_image = model(lr_image)
 
+        mse_val = ((hr_rescaled_image - sr_image) ** 2).data.mean().item()
+        psnr_val = 10 * log10(1 / mse_val)
+        ssim_val = ssim(sr_image, hr_image, data_range=1).item()
+
+        results["mse"].append(mse_val)
+        results["psnr"].append(psnr_val)
+        results["ssim"].append(ssim_val)
+
         test_images = torch.stack([
             display_transform()(lr_image.squeeze(0)),
             display_transform()(hr_image.squeeze(0)),
@@ -60,14 +68,6 @@ for image_set in image_sets:
         ])
         image = utils.make_grid(test_images, nrow=3, padding=5)
         utils.save_image(image, test_images_folder_path + image_name, padding=5)
-
-        mse_val = ((hr_rescaled_image - sr_image) ** 2).data.mean().item()
-        ssim_val = ssim(sr_image, hr_rescaled_image).item()
-        psnr_val = 100 if mse_val == 0 else (20 * log10(255.0 / sqrt(mse_val)))
-
-        results["mse"].append(mse_val)
-        results["ssim"].append(ssim_val)
-        results["psnr"].append(psnr_val)
 
     statistics_folder_path = "./test_results/statistics/"
     if not os.path.exists(statistics_folder_path):
