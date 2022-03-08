@@ -37,11 +37,11 @@ implementiran je i drugi model po uzoru na SRGAN rad sa WGAN-GP cost funkcijom.
 
 U tablici vidimo usporedbu modela iz SRGAN rada sa našim modelom (vrijednost u zagradama).
 
-| Dataset | Scale |       PSNR       |        SSIM        |     MOS     |
-| :-----: | :---: | :--------------: | :----------------: | :---------: |
-|  Set5   |   4   | 29.40 (**-**) | 0.8472 (**-**) | 3.58 (**-**) |
-|  Set14  |   4   | 26.02 (**-**) | 0.7397 (**-**) | 3.72 (**-**) |
-| BSDS100 |   4   | 25.16 (**-**) | 0.6688 (**-**) | 3.56 (**-**) |
+| Dataset | Scale |       PSNR       |        SSIM        |
+| :-----: | :---: | :--------------: | :----------------: |
+|  Set5   |   4   | 29.40 (**27.15**) | 0.8472 (**0.7904**) |
+|  Set14  |   4   | 26.02 (**24.87**) | 0.7397 (**0.6779**) |
+| BSDS100 |   4   | 25.16 (**23.77**) | 0.6688 (**0.6108**) |
 
 Slijedi nekoliko primjera slika gdje prva slika predstavlja sliku niske rezolucije, druga slika sliku visoke rezolucije, 
 a treća slika sliku generiranu našim modelom (sliku 4x povećane rezolucije).
